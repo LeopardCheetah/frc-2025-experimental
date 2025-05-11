@@ -58,11 +58,6 @@ import frc.robot.commands.intake_indexer.RunIntake;
 import frc.robot.commands.intake_indexer.RunIntakeWithIndexer;
 import frc.robot.commands.intake_indexer.RunIntakeWithIndexerJoystick;
 
-// pivot imports
-import frc.robot.subsystems.Pivot;
-import frc.robot.commands.pivot.ArcadePivot;
-import frc.robot.commands.pivot.PIDForPivot;
-
 import frc.robot.subsystems.Climb;
 import frc.robot.commands.climb.JoystickServo;
 import frc.robot.commands.climb.ServoMovement;
@@ -88,8 +83,8 @@ public class RobotContainer {
   private final JoystickButton m_resetHeadingButton = new JoystickButton(m_driverJoystick, IOConstants.kResetHeadingButtonID);
 
 
-  private final JoystickButton m_elevatorArmManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kElevatorArmManualOverrideButtonID); // 7
-  private final JoystickButton m_pivotRollerManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kPivotArmManualOverrideButtonID); // 8 (i think)
+  private final JoystickButton m_elevatorArmManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kElevatorArmManualOverrideButtonID);
+  private final JoystickButton m_pivotRollerManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kPivotArmManualOverrideButtonID); 
 
 
 
@@ -100,10 +95,6 @@ public class RobotContainer {
   private final JoystickButton m_L3ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL3ScoringButtonID);
   private final JoystickButton m_L4ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL4ScoringButtonID);
 
-  // private final JoystickButton m_L2DealgaeButton = new JoystickButton(m_driverJoystick, IOConstants.kL2DealgaeButtonID);
-  // private final JoystickButton m_L3DealgaeButton = new JoystickButton(m_driverJoystick, IOConstants.kL3DealgaeButtonID);
-
-  // private final POVButton m_dealgaeButton = new POVButton(m_driverJoystick, 0);
 
   private final POVButton m_L2DealgaeButton = new POVButton(m_secondJoystick, 270); // left d-pad
   private final POVButton m_L3DealgaeButton = new POVButton(m_secondJoystick, 90); // right d-pad
@@ -114,14 +105,6 @@ public class RobotContainer {
   private final ArcadeArm m_arcadeArm2 = new ArcadeArm(m_arm, m_secondJoystick);
 
 
-  // unused
-  /*
-  private final ArmToPos m_armToPos = new ArmToPos(m_arm, 0.781); 
-  private JoystickButton m_armToPosButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmButtonID);
-  // use these for actual code
-  private final JoystickButton m_armIntakeButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmOuttakeIntakeButtonID);
-  private final JoystickButton m_armOuttakeButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmOuttakeOuttakeButtonID);
-  */
 
 
   // see https://docs.google.com/spreadsheets/d/1hX9_6sB4cpDO8FewZYjP8up_QC9e0-G85cX7ijPXfBs/ for google sheet constants
@@ -189,33 +172,10 @@ public class RobotContainer {
   private ElevatorToPosition m_elevatorToGround3 = new ElevatorToPosition(m_elevator, 0.01); // reset elevator position
   private ElevatorToPosition m_elevatorToGround4 = new ElevatorToPosition(m_elevator, 0.01); // reset elevator position
 
-
-
-
   
-  // chat our spark max fell off
-  // private Pivot m_pivot = new Pivot();
-
-  // we actually only have 2 pivot positions -- the intake from the ground, and the stow upwards
-  // intake from the ground is at approximately 0.1385 rotations
-  // pivot stow is at approximately 0.8069 rotations
-
-  // private ArcadePivot m_arcadePivot = new ArcadePivot(m_pivot, m_secondJoystick);
-
-  // private PIDForPivot m_pivotPIDToStow = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToStow1 = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToStow2 = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToIntake = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private PIDForPivot m_pivotPIDToIntake2 = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private PIDForPivot m_pivotPIDToIntake3 = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private JoystickButton m_pivotButtonToStow = new JoystickButton(m_secondJoystick, PivotConstants.kPivotStowButtonID);
-  // private JoystickButton m_pivotButtonToIntake = new JoystickButton(m_secondJoystick, PivotConstants.kPivotIntakeButtonID);
+  // our pivot is gone
 
 
-
-
-
-  // begin intake/indexer
   private Intake m_intake = new Intake();
   private final double kIntakeIndexerSpeed = 0.9;
   // private RunIntake m_intakeIn = new RunIntake(m_intake, kIntakeIndexerSpeed); // positive speed == intake in
@@ -563,9 +523,7 @@ public class RobotContainer {
   private void bindSubsystemCommands() {
     ////// 
     m_swerve.setDefaultCommand(m_swerveJoystick);
-    m_lockServo.schedule();
-    // m_pivot.setDefaultCommand(m_arcadePivot);
-    // m_climb.setDefaultCommand(m_moveServoWithJoystick);
+    m_lockServo.schedule(); // sorry lys
   }
 }
   
