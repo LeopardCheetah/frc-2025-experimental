@@ -8,7 +8,6 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,10 +24,16 @@ public class SwerveJoystick extends Command {
   private final SwerveDrive m_swerveDrive;
   public int m_driveMode = 0;
 
+  private double xSpeed;
+  private double ySpeed;
+  private double turningSpeed;
+  private double _newXSpeed;
+  private double _newYSpeed;
+
   public SwerveJoystick(SwerveDrive swerveDrive, Joystick joystick) {
     
-    m_xSlewRateLimiter = new SlewRateLimiter(DriveConstants.kMaxTranslationalMetersPerSecond);
-    m_ySlewRateLimiter = new SlewRateLimiter(DriveConstants.kMaxTranslationalMetersPerSecond);
+    m_xSlewRateLimiter = new SlewRateLimiter(DriveConstants.kMaxTranslationalAccel);
+    m_ySlewRateLimiter = new SlewRateLimiter(DriveConstants.kMaxTranslationalAccel);
     m_joystick = joystick;
     m_swerveDrive = swerveDrive;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,68 +42,54 @@ public class SwerveJoystick extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {System.out.println("SwerveJoystick Initialized");}
+  public void initialize() {
+    System.out.println("SwerveJoystick Initialized");
+  }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = -m_joystick.getRawAxis(IOConstants.kJoystickYAxis);
-    double ySpeed = -m_joystick.getRawAxis(IOConstants.kJoystickXAxis);
-    double turningSpeed = -m_joystick.getRawAxis(IOConstants.kJoystickRotAxis);
+    xSpeed = -m_joystick.getRawAxis(IOConstants.kJoystickYAxis);
+    ySpeed = -m_joystick.getRawAxis(IOConstants.kJoystickXAxis);
+    turningSpeed = -m_joystick.getRawAxis(IOConstants.kJoystickRotAxis);
 
 
-    // if (m_driveMode == 0) { //standard mode;
-    // //Makes the speed response exponential in relation to the joystick input.
-    // //That way, the first little bit of joystick input gives more control.  
-    // xSpeed = Math.signum(xSpeed) * (Math.pow(2, Math.abs(xSpeed)) -1) * -1;
-    // ySpeed = Math.signum(ySpeed) * (Math.pow(2, Math.abs(ySpeed)) -1) * -1;
-    // turningSpeed = Math.signum(turningSpeed) * (Math.pow(2, Math.abs(turningSpeed)) -1) * -1;
-    // //xSpeed = Math.pow(xSpeed, 5);
-    // // ySpeed = Math.pow(ySpeed, 5);
-    // // turningSpeed = Math.pow(turningSpeed, 5);
-    // }
-    // else if(m_driveMode == 1)
-    // {
-    //   xSpeed = Math.signum(xSpeed) * (Math.pow(2, Math.abs(xSpeed)) -1) * -0.1;
-    //   ySpeed = Math.signum(ySpeed) * (Math.pow(2, Math.abs(ySpeed)) -1) * -0.1;
-    //   turningSpeed = Math.signum(turningSpeed) * (Math.pow(2, Math.abs(turningSpeed)) -1) * -0.1;
-    // }
+    // turn speed from squared inputs or whatever into circular inputs
+    // see https://stackoverflow.com/questions/13211595/how-can-i-convert-coordinates-on-a-circle-to-coordinates-on-a-square/32391780#32391780
+    // 2.82843 ~ 2sqrt(2)
+    _newXSpeed = 0.5*(Math.sqrt(2 + 2.82843*xSpeed + xSpeed*xSpeed - ySpeed*ySpeed) - Math.sqrt(2 - 2.82843*xSpeed + xSpeed*xSpeed - ySpeed*ySpeed));
+    _newYSpeed = 0.5*(Math.sqrt(2 + 2.82843*ySpeed - xSpeed*xSpeed + ySpeed*ySpeed) - Math.sqrt(2 - 2.82843*ySpeed - xSpeed*xSpeed + ySpeed*ySpeed));
 
+    _newXSpeed = Math.min(_newXSpeed, 1);
+    _newXSpeed = Math.max(_newXSpeed, -1);
+    _newYSpeed = Math.min(_newYSpeed, 1);
+    _newYSpeed = Math.max(_newYSpeed, -1);
 
-      // xSpeed = Math.signum(xSpeed) * (Math.pow(2, Math.abs(xSpeed)) -1) * -1;
-      // ySpeed = Math.signum(ySpeed) * (Math.pow(2, Math.abs(ySpeed)) -1) * -1;
-      // turningSpeed = Math.signum(turningSpeed) * (Math.pow(2, Math.abs(turningSpeed)) -1) * -1;
-
-      xSpeed = Math.signum(xSpeed) * Math.pow(Math.abs(xSpeed), 1.75);
-      ySpeed = Math.signum(ySpeed) * Math.pow(Math.abs(ySpeed), 1.75);
-      // turningSpeed = Math.pow(turningSpeed, 5);
-    
-    
-
-    // SmartDashboard.putNumber("Joystick/xSpeedRaw", xSpeed);
-    // SmartDashboard.putNumber("Joystick/ySpeedRaw", ySpeed);
-    // SmartDashboard.putNumber("Joystick/turningSpeedRaw", turningSpeed);
-
-    //apply deadband
-    xSpeed = Math.abs(xSpeed) > IOConstants.kDeadband ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > IOConstants.kDeadband ? ySpeed : 0.0;
+    _newXSpeed = Math.abs(_newXSpeed) > IOConstants.kDeadband ? _newXSpeed : 0.0;
+    _newYSpeed = Math.abs(_newYSpeed) > IOConstants.kDeadband ? _newYSpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > IOConstants.kDeadband ? turningSpeed : 0.0;
 
     //use SlewRateLimiter with DriveConstants
-    xSpeed = m_xSlewRateLimiter.calculate(xSpeed) * DriveConstants.kMaxTranslationalMetersPerSecond;
-    ySpeed = m_ySlewRateLimiter.calculate(ySpeed) * DriveConstants.kMaxTranslationalMetersPerSecond;
-    turningSpeed = turningSpeed * DriveConstants.kMaxTurningRadiansPerSecond;
-    SmartDashboard.putNumber("Joystick/xSpeedCommanded", xSpeed);
-    SmartDashboard.putNumber("Joystick/ySpeedCommanded", ySpeed);
-    SmartDashboard.putNumber("Joystick/turningSpeedCommanded", turningSpeed);
-    //Logger.recordOutput(getName(), desiredSwerveModuleStates);
+    _newXSpeed = m_xSlewRateLimiter.calculate(_newXSpeed) * DriveConstants.kMaxTranslationalSpeed;
+    _newYSpeed = m_ySlewRateLimiter.calculate(_newYSpeed) * DriveConstants.kMaxTranslationalSpeed;
 
-    m_swerveDrive.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed,ySpeed,turningSpeed, m_swerveDrive.getAngle()));
+    turningSpeed = turningSpeed * DriveConstants.kMaxTurningSpeed;
+
+    SmartDashboard.putNumber("Joystick/xSpeedCommanded", _newXSpeed);
+    SmartDashboard.putNumber("Joystick/ySpeedCommanded", _newYSpeed);
+    SmartDashboard.putNumber("Joystick/turningSpeedCommanded", turningSpeed);
+
+    m_swerveDrive.driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(_newXSpeed, _newYSpeed, turningSpeed, m_swerveDrive.getAngle()));
   }
+
+
+
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
+
 
   // Returns true when the command should end.
   @Override

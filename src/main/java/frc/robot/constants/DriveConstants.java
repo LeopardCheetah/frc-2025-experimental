@@ -13,14 +13,19 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public final class DriveConstants {
+
+
     // These are used in SwerveJoystick
-    // If you want to reduce the speed of the robot, do not change this values. Instead, add a multiplier to the speeds in SwerveJoystick
-    public static final double kMaxTranslationalMetersPerSecond = 5;
-    public static final double kMaxTurningRadiansPerSecond = 1.35 * Math.PI;
+    public static final double kMaxTranslationalSpeed = 5; // meters/second;
+    public static final double kMaxTurningSpeed = 1.35 * Math.PI; // radians/second
     public static final double kTranslationalDeadbandMetersPerSecond = 0.01;
 
     public static final PIDConstants kTranslationConstants = new PIDConstants(0.75, 0, 0); //PID constants for whole robot chassis speeds
     public static final PIDConstants kRotationConstants = new PIDConstants(0.75, 0, 0); // TODO -- tune these to the right values
+
+    // technically unitless but since its the rate of change of the speed its accel
+    public static final double kMaxTranslationalAccel = 1; 
+
 
 
     public static int kIMUCanID = 0; //CAN
@@ -29,7 +34,8 @@ public final class DriveConstants {
         new Translation2d(+0.295, +0.292),
         new Translation2d(+0.295, -0.292),
         new Translation2d(-0.295, +0.292),
-        new Translation2d(-0.295, -0.292));
+        new Translation2d(-0.295, -0.292)
+    );
 
     public static final int kFrontLeftDriveId = 1; //CAN
     public static final int kFrontLeftTurnId = 11; //CAN
