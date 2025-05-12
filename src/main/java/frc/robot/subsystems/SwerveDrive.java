@@ -239,14 +239,9 @@ public class SwerveDrive extends SubsystemBase
 
   public SwerveDrive() {
     SmartDashboard.putData("Reset_Heading", resetHeadingCommand());
+    SmartDashboard.putData("Field", m_field);
     CanandEventLoop.getInstance();
-    // Leaving one here so I can remember how to do this later;
-    // NamedCommands.registerCommand("Print", new PrintCommand("Print command is running!!!"));
 
-
-  
-    // m_odometryThread = new OdometryThread();
-    // m_odometryThread.start();
 
     try{
       Translation2d[] t = {new Translation2d(0.368 - 0.0667, 0.368 - 0.0667),
@@ -303,11 +298,6 @@ public class SwerveDrive extends SubsystemBase
             System.out.println("ERROR in sleep thread: " + e);
           }
         }).start();
-    // }
-    // catch(Exception e)
-    // {
-    //   System.out.println("RobotConfig GUI Settings error");
-    // }
       } catch (Exception e) {
         
       }
@@ -323,85 +313,6 @@ public class SwerveDrive extends SubsystemBase
     m_backRight.stop();
   }
 
-  // public class OdometryThread
-  // {
-  //   protected static final int kThreadPriority = 3;
-  //   protected final Thread m_thread; 
-  //   protected volatile boolean m_running = false;
-    
-  //   protected final BaseStatusSignal[] m_allSignals;
-
-  //   protected int lastThreadPriority = kThreadPriority;
-  //   protected volatile int threadPriorityToSet = kThreadPriority;
-
-  //   public OdometryThread()
-  //   {
-  //     m_thread = new Thread(this::run);
-  //     m_thread.setDaemon(true);
-
-  //     //drivePos, driveVel, 
-  //     m_allSignals = new BaseStatusSignal[(kModuleCount * SwerveModule.m_numberOfStatusSignals)];
-
-      
-  //     for (int i = 0; i < kModuleCount; ++i) 
-  //     {
-  //         m_allSignals[(i * SwerveModule.m_numberOfStatusSignals) + 0] = m_modules[i].getDrivePosStatusSignal();
-  //         m_allSignals[(i * SwerveModule.m_numberOfStatusSignals) + 1] = m_modules[i].getDriveVelStatusSignal();
-  //     }
-  //   }
-    
-  //   public void start() 
-  //   {
-  //     m_running = true;
-  //     m_thread.start();
-  //   }
-
-  //   public void stop(long millis)
-  //   {
-  //     m_running = false;
-  //     try
-  //     {
-  //       m_thread.join(millis);
-  //     }
-  //     catch (final InterruptedException e)
-  //     {
-  //       Thread.currentThread().interrupt();
-  //     }
-  //   }
-
-  //   public void run()
-  //   {
-  //     BaseStatusSignal.setUpdateFrequencyForAll(kUpdateFrequency, m_allSignals);
-  //     Threads.setCurrentThreadPriority(true, kThreadPriority);
-
-  //     while(m_running)
-  //     {
-  //       try{
-  //         Thread.sleep(1/kUpdateFrequency);
-  //       }
-  //       catch(Exception e)
-  //       {
-  //         ;
-  //       }
-  //       try
-  //       {
-  //         m_stateLock.writeLock().lock();
-
-  //         // m_modulePositions = getModulePositions();
-  //         // m_moduleStates = getModuleStates();
-          
-  //         // m_odo.update(getAngle(), m_modulePositions);
-
-  //       }
-  //       finally
-  //       {
-  //         m_stateLock.writeLock().unlock();
-  //       }
-  //     }
-  //   }
-  // }
-
-  
 
   @Override
   public void periodic() 
@@ -409,15 +320,9 @@ public class SwerveDrive extends SubsystemBase
     m_modulePositions = getModulePositions();
     m_moduleStates = getModuleStates();
     m_odo.update(getAngle(), m_modulePositions);
-    SmartDashboard.putNumber("X", m_odo.getPoseMeters().getX());
-    SmartDashboard.putNumber("Y", m_odo.getPoseMeters().getY());
+    SmartDashboard.putNumber("RobotX", m_odo.getPoseMeters().getX());
+    SmartDashboard.putNumber("RobotY", m_odo.getPoseMeters().getY());
 
     m_field.setRobotPose(m_odo.getPoseMeters());
-    // SmartDashboard.putData("Swerve/Odo/Field", m_field);
-
-    // SmartDashboard.putNumber("X", getPoseMeters().getX());
-    // SmartDashboard.putNumber("Y", getPoseMeters().getY());
-    
-    // SmartDashboard.putData("Reset_Heading", resetHeadingCommand());
   }
 }

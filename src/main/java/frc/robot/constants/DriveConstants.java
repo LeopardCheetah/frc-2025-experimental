@@ -24,7 +24,8 @@ public final class DriveConstants {
     public static final PIDConstants kRotationConstants = new PIDConstants(0.75, 0, 0); // TODO -- tune these to the right values
 
     // technically unitless but since its the rate of change of the speed its accel
-    public static final double kMaxTranslationalAccel = 1; 
+    // in meters/second/second
+    public static final double kMaxTranslationalAccel = 2; 
 
 
 
