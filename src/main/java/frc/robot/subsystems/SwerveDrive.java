@@ -12,8 +12,6 @@ import com.reduxrobotics.canand.CanandEventLoop;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.jar.Attributes.Name;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;

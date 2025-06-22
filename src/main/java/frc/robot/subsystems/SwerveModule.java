@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 import frc.robot.constants.*;
 
-import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
