@@ -12,12 +12,14 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimbConstants;
 
 // this is for our deep climb
+@Logged
 public class Climb extends SubsystemBase {
   /** Creates a new Climb. */
   
@@ -47,7 +49,7 @@ public class Climb extends SubsystemBase {
 
   public double getMotorRotations(){
     // return m_climbMotor.getAbsoluteEncoder().getPosition();
-    return m_climbMotor.getEncoder().getPosition(); // i think this works -- TODO check what kind of encoder the spark flex has
+    return m_climbMotor.getEncoder().getPosition(); // i think this works
   }
 
   public void setServoPosition(double pos){

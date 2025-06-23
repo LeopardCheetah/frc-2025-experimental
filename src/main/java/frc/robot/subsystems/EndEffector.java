@@ -8,10 +8,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 
+@Logged
 public class EndEffector extends SubsystemBase {
   private SparkMax m_endEffectorMotor = new SparkMax(ArmConstants.kEndEffectorMotorDeviceID, MotorType.kBrushless);
   // note: the bream break, the green wire on the robot, is plugged into the FORWARD limit switch on the spark max

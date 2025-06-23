@@ -10,7 +10,6 @@ import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import com.reduxrobotics.canand.CanandEventLoop;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.jar.Attributes.Name;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Utils;
@@ -22,6 +21,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 //import com.pathplanner.lib.util.swerve.*;
 
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -31,25 +32,21 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.arm.ArmToPos;
-import frc.robot.commands.arm.SpinEndEffectorMotor;
-import frc.robot.commands.elevator.ElevatorPosition;
-import frc.robot.commands.elevator.ElevatorToPosition;
-import frc.robot.commands.intake_indexer.RunIntakeWithIndexer;
+
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants;
 
 @SuppressWarnings("unused")
 
+@Logged
 public class SwerveDrive extends SubsystemBase 
 {
   private final SwerveModule m_frontLeft = new SwerveModule(
@@ -147,6 +144,7 @@ public class SwerveDrive extends SubsystemBase
     return m_odo.getPoseMeters();
   }
 
+  @NotLogged // there's some issue with the generated class struct method here
   public SwerveDriveKinematics getSwerveKinematics(){
     return DriveConstants.kDriveKinematics;
   }

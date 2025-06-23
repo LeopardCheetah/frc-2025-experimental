@@ -4,8 +4,6 @@
 
 package frc.robot.commands.intake_indexer;
 
-import java.nio.file.WatchEvent.Kind;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;

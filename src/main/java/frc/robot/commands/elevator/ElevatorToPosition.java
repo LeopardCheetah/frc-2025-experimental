@@ -4,6 +4,8 @@
 
 package frc.robot.commands.elevator;
 
+import edu.wpi.first.epilogue.Logged;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +15,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+@Logged
 public class ElevatorToPosition extends Command {
   private Elevator m_elevator;
   private TrapezoidProfile.State m_goal;

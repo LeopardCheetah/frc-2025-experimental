@@ -9,9 +9,11 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
+@Logged
 public class Indexer extends SubsystemBase {
 
   private SparkMax m_indexerMotor = new SparkMax(IntakeConstants.kIndexerMotorID, MotorType.kBrushless);

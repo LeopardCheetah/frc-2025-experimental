@@ -5,6 +5,8 @@
 package frc.robot.commands.arm;
 
 
+import edu.wpi.first.epilogue.Logged;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +14,7 @@ import frc.robot.constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+@Logged
 public class ArmToPos extends Command {
   private double m_pos;
   private Arm m_arm;
@@ -81,8 +84,6 @@ public class ArmToPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; 
-    // TODO
-    // NEED THE FINISH PID THING
+    return false; // if it works it works
   }
 }

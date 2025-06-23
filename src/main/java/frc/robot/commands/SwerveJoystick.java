@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,6 +14,7 @@ import frc.robot.constants.DriveConstants;
 import frc.robot.constants.IOConstants;
 import frc.robot.subsystems.SwerveDrive;
 
+@Logged
 public class SwerveJoystick extends Command {
   /** Creates a new SwerveJoystick. */
 

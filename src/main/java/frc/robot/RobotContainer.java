@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.epilogue.Logged;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.SwerveJoystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -58,13 +60,9 @@ import frc.robot.commands.intake_indexer.RunIntake;
 import frc.robot.commands.intake_indexer.RunIntakeWithIndexer;
 import frc.robot.commands.intake_indexer.RunIntakeWithIndexerJoystick;
 
-// pivot imports
-import frc.robot.subsystems.Pivot;
-import frc.robot.commands.pivot.ArcadePivot;
-import frc.robot.commands.pivot.PIDForPivot;
-
+// the pivot is gone
+// climb
 import frc.robot.subsystems.Climb;
-import frc.robot.commands.climb.JoystickServo;
 import frc.robot.commands.climb.ServoMovement;
 import frc.robot.commands.climb.SpinVortexRotations;
 
@@ -76,6 +74,7 @@ import frc.robot.commands.climb.SpinVortexRotations;
  * periodic methods (other than commandsthe scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+@Logged
 public class RobotContainer {
  
   // The robot's subsystems and  are defined here...
@@ -91,19 +90,10 @@ public class RobotContainer {
   private final JoystickButton m_elevatorArmManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kElevatorArmManualOverrideButtonID); // 7
   private final JoystickButton m_pivotRollerManualControlButton = new JoystickButton(m_secondJoystick, IOConstants.kPivotArmManualOverrideButtonID); // 8 (i think)
 
-
-
-
-
   private final JoystickButton m_L1ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL1ScoringButtonID);
   private final JoystickButton m_L2ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL2ScoringButtonID);
   private final JoystickButton m_L3ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL3ScoringButtonID);
   private final JoystickButton m_L4ScoringButton = new JoystickButton(m_secondJoystick, IOConstants.kL4ScoringButtonID);
-
-  // private final JoystickButton m_L2DealgaeButton = new JoystickButton(m_driverJoystick, IOConstants.kL2DealgaeButtonID);
-  // private final JoystickButton m_L3DealgaeButton = new JoystickButton(m_driverJoystick, IOConstants.kL3DealgaeButtonID);
-
-  // private final POVButton m_dealgaeButton = new POVButton(m_driverJoystick, 0);
 
   private final POVButton m_L2DealgaeButton = new POVButton(m_secondJoystick, 270); // left d-pad
   private final POVButton m_L3DealgaeButton = new POVButton(m_secondJoystick, 90); // right d-pad
@@ -112,17 +102,6 @@ public class RobotContainer {
   private final ArcadeArm m_arcadeArm = new ArcadeArm(m_arm, m_secondJoystick);
   private final ArcadeArm m_arcadeArm1 = new ArcadeArm(m_arm, m_secondJoystick);
   private final ArcadeArm m_arcadeArm2 = new ArcadeArm(m_arm, m_secondJoystick);
-
-
-  // unused
-  /*
-  private final ArmToPos m_armToPos = new ArmToPos(m_arm, 0.781); 
-  private JoystickButton m_armToPosButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmButtonID);
-  // use these for actual code
-  private final JoystickButton m_armIntakeButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmOuttakeIntakeButtonID);
-  private final JoystickButton m_armOuttakeButton = new JoystickButton(m_secondJoystick, ArmConstants.kArmOuttakeOuttakeButtonID);
-  */
-
 
   // see https://docs.google.com/spreadsheets/d/1hX9_6sB4cpDO8FewZYjP8up_QC9e0-G85cX7ijPXfBs/ for google sheet constants
   private final ArmToPos m_armToL1 = new ArmToPos(m_arm, ArmConstants.kL1ArmTickPosition);
@@ -166,7 +145,6 @@ public class RobotContainer {
 
   public Elevator m_elevator = new Elevator();
   private ArcadeElevator m_arcadeElevator = new ArcadeElevator(m_secondJoystick, m_elevator);
-  private ArcadeElevator m_arcadeElevator1 = new ArcadeElevator(m_secondJoystick, m_elevator);
 
   // Input of 15 means that the elevator will ideally move up by 15 inches. This was just chosen as a test.
   // this is a trapezoidal command!!
@@ -188,31 +166,6 @@ public class RobotContainer {
   private ElevatorToPosition m_elevatorToGround2 = new ElevatorToPosition(m_elevator, 0.01); // reset elevator position
   private ElevatorToPosition m_elevatorToGround3 = new ElevatorToPosition(m_elevator, 0.01); // reset elevator position
   private ElevatorToPosition m_elevatorToGround4 = new ElevatorToPosition(m_elevator, 0.01); // reset elevator position
-
-
-
-
-  
-  // chat our spark max fell off
-  // private Pivot m_pivot = new Pivot();
-
-  // we actually only have 2 pivot positions -- the intake from the ground, and the stow upwards
-  // intake from the ground is at approximately 0.1385 rotations
-  // pivot stow is at approximately 0.8069 rotations
-
-  // private ArcadePivot m_arcadePivot = new ArcadePivot(m_pivot, m_secondJoystick);
-
-  // private PIDForPivot m_pivotPIDToStow = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToStow1 = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToStow2 = new PIDForPivot(m_pivot, PivotConstants.kPivotStowPosition);
-  // private PIDForPivot m_pivotPIDToIntake = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private PIDForPivot m_pivotPIDToIntake2 = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private PIDForPivot m_pivotPIDToIntake3 = new PIDForPivot(m_pivot, PivotConstants.kPivotIntakePosition);
-  // private JoystickButton m_pivotButtonToStow = new JoystickButton(m_secondJoystick, PivotConstants.kPivotStowButtonID);
-  // private JoystickButton m_pivotButtonToIntake = new JoystickButton(m_secondJoystick, PivotConstants.kPivotIntakeButtonID);
-
-
-
 
 
   // begin intake/indexer
@@ -340,19 +293,9 @@ public class RobotContainer {
    private void configureBindings() {
     // see discord channel for button bindings
 
-    // this is the testing section.
-    // everything here should only be testing thing
-
-
     m_outtakeEndEffectorButton.whileTrue(m_outtakeEndEffector);
     m_intakeEndEffectorButton.whileTrue(m_intakeEndEffector);
     
-    // m_elevatorResetButton.whileTrue(m_elevator.resetElevatorEncoder());
-
-    // note:
-    // if a line is commented out using "/////" (5 in a row), that is for testing purposes (and has not been tested)
-    // if it has 6 in a row, that means the thing has been tested and works.
-
 ///////////////////////////////////////////////////////////
     // driver joystick bindings:
 
@@ -363,12 +306,7 @@ public class RobotContainer {
     m_spinEndEffectorButton.whileTrue(m_outtakeEndEffector); // button 5, spin arm outtake roller
 
 
-  
-
-    
-  
-    
-
+    // this is a lie
     // end driver joystick bindings
 
 /////////////////////////////////////////////////////////////
@@ -406,7 +344,7 @@ public class RobotContainer {
     // button 7 -- the middle button
     m_elevatorArmManualControlButton.onTrue(
       Commands.parallel(
-        m_arcadeElevator1,
+        m_arcadeElevator,
         m_arcadeArm1
       )
     );
@@ -416,15 +354,12 @@ public class RobotContainer {
     // button id 8 allows manual roller + pivot to move 
     // changed from arm/intake rollers
     m_pivotRollerManualControlButton.onTrue(
-      Commands.parallel(
-        // m_arcadePivot,
         m_manualSpinIndexerIntake1
-      )
     );
     
 
 
-    // need to redo these -- dpad commands
+    // redid the dpad commands
     // use povUp to do the thing
 
     m_L2DealgaeButton.onTrue(
@@ -443,26 +378,6 @@ public class RobotContainer {
 
 
     
-    // m_dealgaeButton.onTrue(
-    //   Commands.parallel(
-    //   m_armToL2Dealgae,
-      // m_elevatorDealgae)
-    // );
-
-    // m_dealgaeButton.onTrue(
-    //   Commands.parallel(
-    //     m_armToL2Dealgae,
-    //     () -> {
-    //       if (Math.abs(m_elevator.getElevatorPosition() - ElevatorConstants.kL3ElevatorHeight) <= ElevatorConstants.kDealgaeThreshold) {
-    //         return m_elevatorToL3Dealgae;
-    //       } else if (Math.abs(m_elevator.getElevatorPosition() - ElevatorConstants.kL2ElevatorHeight) <= ElevatorConstants.kDealgaeThreshold) {
-    //         return m_elevatorToL2Dealgae;
-    //       }
-    //     }.get();
-    //   )
-    // )
-    
-
 
     // L1-4 scoring
     // gonna assume it takes <1.5s to score that piece
@@ -472,7 +387,6 @@ public class RobotContainer {
     
     m_L1ScoringButton.onTrue(
       Commands.parallel(
-        // m_armToL1.until(m_armToL1::atSetpoint),
         m_elevatorToL1,
         Commands.sequence(new WaitCommand(0.1), m_armToL1)
       )
@@ -480,8 +394,6 @@ public class RobotContainer {
     
     m_L2ScoringButton.onTrue(
       Commands.parallel(
-        // m_elevatorToL2.until(m_elevatorToL2::atSetpoint),
-        // m_armToL2.until(m_armToL2::atSetpoint)
         m_elevatorToL2,
         Commands.sequence(new WaitCommand(0.1), m_armToL2)
       )
@@ -492,11 +404,8 @@ public class RobotContainer {
     // add pivot pid to balance out the cog
     m_L3ScoringButton.onTrue(
       Commands.parallel(
-        // m_elevatorToL3.until(m_elevatorToL3::atSetpoint),
-        // m_armToL3.until(m_armToL3::atSetpoint)
         m_elevatorToL3,
         Commands.sequence(new WaitCommand(0.1), m_armToL3)
-        // m_pivotPIDToIntake2
       )
     );
 
@@ -504,46 +413,31 @@ public class RobotContainer {
     // also move the pivot down
     m_L4ScoringButton.onTrue(
       Commands.parallel(
-        // m_elevatorToL4.until(m_elevatorToL4::atSetpoint),
-        // m_armToL4.until(m_armToL4::atSetpoint)
         m_elevatorToL4,
         Commands.sequence(new WaitCommand(0.5), m_armToL4)
-        // m_pivotPIDToIntake3
       )
     );
     
 
 
-    // bind button 5 (left trigger)
-    // move pivot up for simplicity
+    // bind button 5 (left trigger) -- stow arm + elevator
     m_stowButton.onTrue(Commands.parallel(
       m_armToGroundIntake,
       m_elevatorToGround2
-      // m_pivotPIDToStow2
-    )); // button 5 -- stow arm and elevator
+    ));
 
     
     // button 6 -- do the intake thing
-
-    
     m_groundIntakeCoralButton.whileTrue(
       Commands.parallel(
         m_elevatorToGround4, 
         m_armToGroundIntake1,
-        // m_pivotPIDToIntake, 
         m_spinIntakeIndexerRollers, 
         m_intakeEndEffector1
       )
     );
 
-    // what it does is move the pivot up (only)
     m_groundIntakeCoralButton.onFalse(
-      // Commands.parallel(
-      //   // m_pivotPIDToStow1,
-      //   m_intakeEndEffector3.withTimeout(1),
-      //   Commands.sequence( // todo: put a beam break thing
-      //     m_spinIntakeIndexerRollers1.withTimeout(1), m_outtakeIntakeIndexerRollers1.withTimeout(1)
-      //   )
       m_outtakeIntakeIndexerRollers1.withTimeout(1)
     );
     
@@ -563,9 +457,7 @@ public class RobotContainer {
   private void bindSubsystemCommands() {
     ////// 
     m_swerve.setDefaultCommand(m_swerveJoystick);
-    m_lockServo.schedule();
-    // m_pivot.setDefaultCommand(m_arcadePivot);
-    // m_climb.setDefaultCommand(m_moveServoWithJoystick);
+    m_lockServo.schedule(); // sorry lys
   }
 }
   
